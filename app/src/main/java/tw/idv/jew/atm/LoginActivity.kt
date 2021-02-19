@@ -18,6 +18,11 @@ class LoginActivity : AppCompatActivity() {
         val passwd = ed_passwd.text.toString()
         if (userid == "jack" && passwd == "1234") {
             Toast.makeText(this, "登入成功", Toast.LENGTH_LONG).show()
+
+            intent.putExtra("LOGIN_USERID", userid)
+            intent.putExtra("LOGIN_PASSWD", passwd)
+            setResult(RESULT_OK, intent)
+
             finish()
         } else {
             AlertDialog.Builder(this)
