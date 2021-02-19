@@ -11,12 +11,21 @@ class LoginActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
+
+        val userId = getSharedPreferences("atm", MODE_PRIVATE)
+                .getString("PREF_USERID", "")
+        ed_userid.setText(userId)
     }
 
     fun login(view: View) {
         val userid = ed_userid.text.toString()
         val passwd = ed_passwd.text.toString()
         if (userid == "jack" && passwd == "1234") {
+            getSharedPreferences("atm", MODE_PRIVATE)
+                    .edit()
+                    .putString("PREF_USERID", userid)
+                    .apply()
+
             Toast.makeText(this, "登入成功", Toast.LENGTH_LONG).show()
 
             intent.putExtra("LOGIN_USERID", userid)
