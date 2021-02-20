@@ -56,7 +56,7 @@ class MaterialActivity : AppCompatActivity() {
             }
         }
 
-        recycler.adapter = adapter
+        recycler.adapter = adapter  //recycler.setAdapter(adapter)
     }
 
     class ContactViewHolder(view: View) : RecyclerView.ViewHolder(view) {

@@ -4,6 +4,8 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.Menu
+import android.view.MenuItem
 
 class MainActivity : AppCompatActivity() {
     var login = false
@@ -33,5 +35,22 @@ class MainActivity : AppCompatActivity() {
                 Log.d("RESULT", "$userid / $passwd")
             }
         }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.menu_main, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when(item.itemId) {
+            R.id.action_contacts -> {
+                startActivity(Intent(this, MaterialActivity::class.java))
+            }
+            R.id.action_help -> {
+
+            }
+        }
+        return super.onOptionsItemSelected(item)
     }
 }
