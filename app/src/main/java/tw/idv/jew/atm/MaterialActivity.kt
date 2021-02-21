@@ -1,19 +1,29 @@
 package tw.idv.jew.atm
 
+import android.Manifest.permission.READ_CONTACTS
+import android.Manifest.permission.WRITE_CONTACTS
+import android.content.pm.PackageManager
 import android.graphics.Color
 import android.os.Bundle
+import android.provider.ContactsContract
 import android.util.Log
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AlertDialog
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.contact_row.view.*
 import kotlinx.android.synthetic.main.content_material.*
 
 class MaterialActivity : AppCompatActivity() {
+    companion object {
+        val REQUEST_CONTACTS = 100
+    }
+    val contacts = mutableListOf<Contact>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,33 +40,77 @@ class MaterialActivity : AppCompatActivity() {
                 .show()
         }
 
-        //data
-        val contacts = listOf<Contact>(
-                Contact("Hank", "6661234"),
-                Contact("Jack", "99838882"),
-                Contact("Jenny", "98881234"),
-                Contact("Eric", "77366363"))
+        val permission = ActivityCompat.checkSelfPermission(this,
+                READ_CONTACTS)
+        if (permission != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this,
+                    arrayOf(READ_CONTACTS, WRITE_CONTACTS),
+                    REQUEST_CONTACTS)
+        } else {
+            readContacts()
+        }
+    }
 
-        recycler.setHasFixedSize(true)  //固定每列資料的寬高，可提升效能與順暢度
-        recycler.layoutManager = LinearLayoutManager(this)  //垂直清單
+    private fun readContacts() {
+        val cursor = contentResolver.query(
+                ContactsContract.Contacts.CONTENT_URI,
+                null,
+                null,
+                null,
+                null)
 
+        cursor?.run {
+            while (cursor.moveToNext()) {
+                val id = cursor.getInt(cursor.getColumnIndex(ContactsContract.Contacts._ID))
+                val name = cursor.getString(
+                        cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME))
+                contacts.add(Contact(name, ""))
+            }
+            setupRecyclerView()
+        }
+    }
+
+    private fun setupRecyclerView() {
+        recycler.setHasFixedSize(true)
+        recycler.layoutManager = LinearLayoutManager(this)
         val adapter = object : RecyclerView.Adapter<ContactViewHolder>() {
-            override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ContactViewHolder {
+            override fun onCreateViewHolder(parent: ViewGroup, viewType: Int)
+                    : ContactViewHolder {
                 val view = layoutInflater.inflate(R.layout.contact_row, parent, false)
                 return ContactViewHolder(view)
+            }
+
+            override fun getItemCount(): Int {
+                return contacts.size
             }
 
             override fun onBindViewHolder(holder: ContactViewHolder, position: Int) {
                 holder.name.setText(contacts.get(position).name)
                 holder.phone.setText(contacts.get(position).phone)
             }
+        }
+        recycler.adapter = adapter
+    }
 
-            override fun getItemCount(): Int {
-                return contacts.size
+    override fun onRequestPermissionsResult(
+            requestCode: Int,
+            permissions: Array<out String>,
+            grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        when(requestCode) {
+            REQUEST_CONTACTS -> {
+                if (grantResults.size > 1 &&
+                        grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    readContacts()
+                } else {
+                    AlertDialog.Builder(this)
+                            .setMessage("必須允許聯絡人權限才能顯示資料")
+                            .setPositiveButton("OK", null)
+                            .show()
+                }
             }
         }
-
-        recycler.adapter = adapter  //recycler.setAdapter(adapter)
     }
 
     class ContactViewHolder(view: View) : RecyclerView.ViewHolder(view) {
