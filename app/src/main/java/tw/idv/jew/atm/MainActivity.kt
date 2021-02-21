@@ -12,6 +12,7 @@ class MainActivity : AppCompatActivity() {
 
     companion object {
         val RC_LOGIN = 30
+        val REQUEST_CAMERA = 50
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -46,6 +47,10 @@ class MainActivity : AppCompatActivity() {
         when(item.itemId) {
             R.id.action_contacts -> {
                 startActivity(Intent(this, MaterialActivity::class.java))
+            }
+            R.id.action_camera -> {
+                val camera = Intent(this, CameraActivity::class.java)
+                startActivityForResult(camera, REQUEST_CAMERA)
             }
             R.id.action_help -> {
 
