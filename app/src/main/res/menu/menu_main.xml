@@ -12,6 +12,10 @@
         android:title="Camera"
         app:showAsAction="ifRoom" />
     <item
+        android:id="@+id/action_expense"
+        android:title="消費記錄"
+        app:showAsAction="ifRoom" />
+    <item
         android:id="@+id/action_help"
         android:title="說明"
         app:showAsAction="never" />
