@@ -9,7 +9,7 @@ import androidx.room.PrimaryKey
 class Expense(
 //    @NonNull  //預設值
     @ColumnInfo(name = "dateAt")
-    var data: String,
+    var date: String,
     var info: String,
     var amount: Int
     //id欄位排序會變最後
