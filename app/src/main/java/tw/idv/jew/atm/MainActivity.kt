@@ -56,6 +56,9 @@ class MainActivity : AppCompatActivity() {
                 val exp = Intent(this, ExpenseActivity::class.java)
                 startActivity(exp)
             }
+            R.id.action_transactions -> {
+                startActivity(Intent(this, TransActivity::class.java))
+            }
             R.id.action_help -> {
 
             }

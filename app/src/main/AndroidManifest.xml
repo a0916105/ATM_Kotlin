@@ -6,8 +6,7 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_CONTACTS" />
     <uses-permission android:name="android.permission.WRITE_CONTACTS" />
-
-    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:allowBackup="true"
@@ -17,7 +16,8 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Atm"
         android:usesCleartextTraffic="true">
-        <activity android:name=".ExpenseActivity"></activity>
+        <activity android:name=".TransActivity"></activity>
+        <activity android:name=".ExpenseActivity" />
         <activity android:name=".CameraActivity" />
         <activity
             android:name=".MaterialActivity"
