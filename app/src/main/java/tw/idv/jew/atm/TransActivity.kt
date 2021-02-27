@@ -3,6 +3,9 @@ package tw.idv.jew.atm
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.module.kotlin.KotlinModule
+import com.fasterxml.jackson.module.kotlin.readValue
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import kotlinx.coroutines.CoroutineScope
@@ -40,7 +43,8 @@ class TransActivity : AppCompatActivity() {
 //                Log.d(TAG, string())
                 val json = string()
 //                parseJSON(json)
-                parseGSON(json)
+//                parseGSON(json)
+                parseJackson(json)
             }
         }
     }
@@ -64,6 +68,14 @@ class TransActivity : AppCompatActivity() {
         val gson = Gson()
         val trans = gson.fromJson<ArrayList<Transaction>>(json,
                 object : TypeToken<ArrayList<Transaction>>(){}.type)
+        trans.forEach { t ->
+            Log.d(TAG, t.toString())
+        }
+    }
+
+    private fun parseJackson(json: String) {
+        val mapper = ObjectMapper().registerModule(KotlinModule())
+        val trans : List<Transaction> = mapper.readValue(json)
         trans.forEach { t ->
             Log.d(TAG, t.toString())
         }
