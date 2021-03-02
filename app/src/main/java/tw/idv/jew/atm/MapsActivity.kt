@@ -5,6 +5,8 @@ import android.content.pm.PackageManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.core.app.ActivityCompat
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
 
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
@@ -18,9 +20,14 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     private val REQUEST_LOCATION: Int = 0
     private lateinit var mMap: GoogleMap
 
+    private lateinit var fuseLocationClient: FusedLocationProviderClient
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_maps)
+
+        fuseLocationClient = LocationServices.getFusedLocationProviderClient(this)
+
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         val mapFragment = supportFragmentManager
                 .findFragmentById(R.id.map) as SupportMapFragment
@@ -61,7 +68,15 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         }
         mMap.isMyLocationEnabled = true
 
-        mMap.setOnMyLocationButtonClickListener { false }
+        mMap.setOnMyLocationButtonClickListener {
+            fuseLocationClient.lastLocation.addOnSuccessListener { location ->
+                location?.run {
+                    val current = LatLng(latitude, longitude)
+                    mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(current, 17f))
+                }
+            }
+            false
+        }
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
