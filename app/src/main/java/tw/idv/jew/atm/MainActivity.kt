@@ -6,6 +6,11 @@ import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.WorkManager
+import java.text.SimpleDateFormat
+import java.util.*
+import java.util.concurrent.TimeUnit
 
 class MainActivity : AppCompatActivity() {
     var login = false
@@ -13,6 +18,7 @@ class MainActivity : AppCompatActivity() {
     companion object {
         val RC_LOGIN = 30
         val REQUEST_CAMERA = 50
+        val TAG = MainActivity::class.java.simpleName
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -51,6 +57,15 @@ class MainActivity : AppCompatActivity() {
             R.id.action_camera -> {
                 val camera = Intent(this, CameraActivity::class.java)
                 startActivityForResult(camera, REQUEST_CAMERA)
+            }
+            R.id.action_work -> {
+                val workRequest = OneTimeWorkRequestBuilder<MyWorker>()
+                    .setInitialDelay(30, TimeUnit.SECONDS)
+                    .build()
+                WorkManager.getInstance(this)
+                    .enqueue(workRequest)
+                val sdf = SimpleDateFormat("HH:mm:ss")
+                Log.d(TAG,"start: ${sdf.format(Date())}")
             }
             R.id.action_service -> {
                 startService(Intent(this, MyService::class.java))
