@@ -62,6 +62,9 @@ class MainActivity : AppCompatActivity() {
             R.id.action_transactions -> {
                 startActivity(Intent(this, TransActivity::class.java))
             }
+            R.id.action_chat -> {
+                startActivity(Intent(this, ChatActivity::class.java))
+            }
             R.id.action_help -> {
 
             }
