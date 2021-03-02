@@ -58,6 +58,9 @@ class MainActivity : AppCompatActivity() {
                 val camera = Intent(this, CameraActivity::class.java)
                 startActivityForResult(camera, REQUEST_CAMERA)
             }
+            R.id.action_maps -> {
+                startActivity(Intent(this, MapsActivity::class.java))
+            }
             R.id.action_work -> {
                 val workRequest = OneTimeWorkRequestBuilder<MyWorker>()
                     .setInitialDelay(30, TimeUnit.SECONDS)

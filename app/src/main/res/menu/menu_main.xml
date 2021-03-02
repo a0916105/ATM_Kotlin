@@ -12,6 +12,9 @@
         android:title="Camera"
         app:showAsAction="ifRoom" />
     <item
+        android:id="@+id/action_maps"
+        android:title="Google Maps" />
+    <item
         android:id="@+id/action_work"
         android:title="Work" />
     <item
